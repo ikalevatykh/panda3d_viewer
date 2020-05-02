@@ -1,0 +1,8 @@
+include README.md LICENSE
+include *.txt
+include .bumpversion.cfg
+include .pylintrc
+include pytest.ini
+recursive-include images *.gif
+recursive-include images *.png
+recursive-include tests *.py

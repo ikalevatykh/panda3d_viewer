@@ -1,0 +1,21 @@
+language: python
+python:
+- '2.7'
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
+install: pip install tox-travis
+script: tox
+notifications:
+  email: false
+deploy:
+  provider: pypi
+  user: ikalevat
+  password:
+    secure: LkYC1xIgSb4gU7cFk7+grEeNjEx1h6PxyuJYWgKXMafDkW8ypaFIlYbeY3smKO0i/jnKz9lL40YZSKMWlJ+BEQiQivSUlgXQdGy45eSqHEOsr0ATdoy0WppALZfskiClYc6LlTRZQQn/eJ9QIeHIlKyldj4uckvo94WC04XkvKfseQqKESUhuYQJKb9r8voBor1e1hMP9eE2Ra84/2h6vnfF+a5WZKN/jPMbQwf7CIIGFeNzJF07y70Heex7BDlNamZYdXVgW1Ds/zW2QtiBtINypFRMiACcwbIk+tZ74g3jBzy9NoaHF/qyTo8PmUdr7R7Ft4L5IeVmYBB69U59Zm+KDWbDQdcOw61gQN1kZdQSjHfhlItAgw0X/h4TqA1r2uZ9CFZTRG5bPmqK361G1mFCFHC/dTND3GiWgw2lWUHdiHmBG52qOQihANGxslT4cSp7lMX7xro3aSgZ6UT5ZGDq0e3oE01m/ksUpVSAyWNGWIpMEQ31hRvlSz9dpt0SKlsDpZDlS50hb1ZhI5WCelc0gNFQUYcczXg6XW4nyiVrBd6BaBL0UY2wq5UsggS5yDOeGrsJKvYGHjznN3wtoFVrEqwRbT/BryIRLBtAOW/a0eT1v2rwxdDW7TdbA+59/BGWMHTcwd1uTYj81G61NZK8Y+4C/mcopNLf27bShN8=
+  on:
+    branch: master
+    tags: true
+  distributions: sdist bdist_wheel
+  skip_existing: true
