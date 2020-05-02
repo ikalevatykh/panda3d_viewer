@@ -1,15 +1,20 @@
 language: python
-
 python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
-  - "3.7"
-  - "3.8"
-
+- '2.7'
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
 install: pip install tox-travis
-
 script: tox
-
 notifications:
   email: false
+deploy:
+  provider: pypi
+  user: "__token__"
+  password:
+    secure: B6Nslu4BqJRlCLLHXMkaGP7KMNre0cPKeIhSrFFOoxlOXzV3SNyyaNyGE0KZMDKBRg1SmIVUDXsMNhp/vfuPAAKkhvogISLYTGlSP9nfPITHiPsPwTo4y7Ymzr8LQPEigQxtG2+Z8z55vXm4wLOCsDfGp1JAZhqlOTpA5j4lutSZzfHdBv8+INBSsvU9gAfuG0hdEMo9sLjdcdND3rZ+scUqF6oDf1gRU1GOmdzkUUkV+ZRCBma8B6bVuuPGk/9+F1mbAobf7g0P9EvDxRSouAbfcvOIXJemGwIesVLpThcoRI3tWGUJgcO9+MYpys6k+IdldCJLhc+QJVXXoqwdW0Qt3Zm4SE7KSh4m3PxTx+A0WBK0fdfhgr7+sG2PWuVFNBT34vxIu5h5sWtGuiz0m1VCktCrX5hpBz0s8VB7XUU07/mq65b/b/tkEfzrrNul/ToqXSWA1zEoKERZd55+MtEi9MNEN3yOY7vw/Os9rp09+0E9JgA1JMP+vHPEcwM7F6QXrUoq1jhgVQT4VbXp/27L3vQIdqoWwzJS/iEAmr/IzVJChxL8dmM1XovLEHqFc/sCpPVPnB0+fHEBHxVWZzPKhvXnKEuj/OwXcOW06YuNbXMlRbhPsEXG+IFJdwQEEpBoGFjbaSLzbtvPt2J+4guW+5uVnCQwSB2YbfQMAx8=
+  on:
+    branch: master
+    tags: true
+  skip_existing: true
