@@ -238,9 +238,10 @@ class ViewerApp(ShowBase):
             size {Vec2} -- plane x,y size
         """
         geom = GeomNode(name)
-        geom.add_geom(geometry.make_plane(size=size))
+        geom.add_geom(geometry.make_plane())
         root = self._groups[root_path]
-        return root.attach_new_node(geom)
+        node = root.attach_new_node(geom)
+        node.set_scale(Vec3(size[0], size[1], 1.0))
 
     def append_sphere(self, root_path, name, radius):
         """Append a sphere primitive node to the group.

@@ -209,7 +209,7 @@ def make_box():
     return geom
 
 
-def make_plane(size):
+def make_plane(size=(1.0, 1.0)):
     """Make a plane geometry.
 
     Arguments:
