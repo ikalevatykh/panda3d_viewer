@@ -190,8 +190,8 @@ class ViewerApp(ShowBase):
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- capsule radius
-            length {flaot} -- capsule length
+            radius {float} -- capsule radius
+            length {float} -- capsule length
         """
         geom = GeomNode(name)
         geom.add_geom(geometry.make_capsule(radius, length))
@@ -204,8 +204,8 @@ class ViewerApp(ShowBase):
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- cylinder radius
-            length {flaot} -- cylinder length
+            radius {float} -- cylinder radius
+            length {float} -- cylinder length
         """
         geom = GeomNode(name)
         geom.add_geom(geometry.make_cylinder())
@@ -246,7 +246,7 @@ class ViewerApp(ShowBase):
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- sphere radius
+            radius {float} -- sphere radius
         """
         geom = GeomNode(name)
         geom.add_geom(geometry.make_sphere())

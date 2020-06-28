@@ -100,8 +100,8 @@ class Viewer:
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- capsule radius
-            length {flaot} -- capsule length
+            radius {float} -- capsule radius
+            length {float} -- capsule length
         """
         self._app.append_capsule(root_path, name, radius, length)
 
@@ -111,8 +111,8 @@ class Viewer:
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- cylinder radius
-            length {flaot} -- cylinder length
+            radius {float} -- cylinder radius
+            length {float} -- cylinder length
         """
         self._app.append_cylinder(root_path, name, radius, length)
 
@@ -142,7 +142,7 @@ class Viewer:
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            radius {flaot} -- sphere radius
+            radius {float} -- sphere radius
         """
         self._app.append_sphere(root_path, name, radius)
 
