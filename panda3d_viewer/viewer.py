@@ -160,6 +160,15 @@ class Viewer:
         """
         self._app.set_material(root_path, name, color_rgba, texture_path)
 
+    def set_materials(self, root_path, name_material_dict):
+        """Override material of nodes within a group.
+
+        Args:
+            root_path (str): path to the group's root node
+            name_material_dict (dict): {node_name : (color_rgba, texture_path)} dictionary
+        """
+        self._app.set_materials(root_path, name_material_dict)
+
     def reset_camera(self, pos, look_at):
         """Reset camera position.
 
