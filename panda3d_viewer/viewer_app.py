@@ -111,7 +111,7 @@ class ViewerApp(ShowBase):
         """User closed the main window."""
         self.stop()
 
-    def append_group(self, root_path, remove_if_exists=True):
+    def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
 
         Arguments:
@@ -119,6 +119,7 @@ class ViewerApp(ShowBase):
 
         Keyword Arguments:
             remove_if_exists {bool} -- remove group with root_path if exists (default: {True})
+            scale {float} -- scale factor for nodes dimensions and positions (default: {1.0})
         """
         if remove_if_exists and root_path in self._groups:
             self.remove_group(root_path)
@@ -127,6 +128,7 @@ class ViewerApp(ShowBase):
         for name in root_path.split('/'):
             root = root.attach_new_node(name)
 
+        root.set_scale(Vec3(scale, scale, scale))
         self._groups[root_path] = root
 
     def remove_group(self, root_path):

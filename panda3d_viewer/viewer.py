@@ -46,7 +46,7 @@ class Viewer:
         """Stop the application."""
         self._app.stop()
 
-    def append_group(self, root_path, remove_if_exists=True):
+    def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
 
         Arguments:
@@ -54,8 +54,9 @@ class Viewer:
 
         Keyword Arguments:
             remove_if_exists {bool} -- remove group with root_path if exists (default: {True})
+            scale {float} -- scale factor for nodes dimensions and positions (default: {1.0})
         """
-        self._app.append_group(root_path, remove_if_exists)
+        self._app.append_group(root_path, remove_if_exists, scale)
 
     def remove_group(self, root_path):
         """Remove a group of nodes.
