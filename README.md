@@ -21,7 +21,7 @@ python setup.py install
 
 ### A simple scene in a GUI window
 
-![Box and sphere](/images/box_and_sphere.png?raw=true "Box and sphere")
+![Box and sphere](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/box_and_sphere.png?raw=true "Box and sphere")
 
 ```python
 from panda3d_viewer import Viewer, ViewerConfig
@@ -51,7 +51,7 @@ viewer.join() # wait until user close the window
 
 ### Render an animation offscreen
 
-![Sphere animation](/images/sphere_anim.gif?raw=true "Sphere animation")
+![Sphere animation](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/sphere_anim.gif?raw=true "Sphere animation")
 
 ```python
 from math import cos, sin, pi
@@ -89,9 +89,9 @@ with imageio.get_writer('sphere_anim.gif', mode='I') as writer:
 
 ### Using with Pinocchio
 
-![Pinocchio robots](/images/pinocchio.png?raw=true "Pinocchio robots")
+![Pinocchio robots](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/pinocchio.png?raw=true "Pinocchio robots")
 
-[Pinocchio](https://github.com/stack-of-tasks/pinocchio/) is a library for rigid multi-body dynamics computation. To see how to use this package with Pinocchio see [example 1](https://github.com/stack-of-tasks/pinocchio/examples/panda3d-viewer.py), [example 2](https://github.com/stack-of-tasks/pinocchio/examples/panda3d-viewer-play.py).
+[Pinocchio](https://github.com/stack-of-tasks/pinocchio/) is a library for rigid multi-body dynamics computation. To see how to use this package with Pinocchio see [example 1](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer.py), [example 2](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer-play.py).
 
 ## API
 
