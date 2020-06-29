@@ -84,7 +84,7 @@ class Viewer:
         """
         self._app.move_nodes(root_path, name_pose_dict)
 
-    def append_mesh(self, root_path, name, mesh_path, scale, offset=None):
+    def append_mesh(self, root_path, name, mesh_path, scale, frame=None):
         """Append a mesh node to the group.
 
         Arguments:
@@ -94,11 +94,11 @@ class Viewer:
             scale {Vec3} -- mesh scale
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_mesh(root_path, name, mesh_path, scale, offset)
+        self._app.append_mesh(root_path, name, mesh_path, scale, frame)
 
-    def append_capsule(self, root_path, name, radius, length, offset=None):
+    def append_capsule(self, root_path, name, radius, length, frame=None):
         """Append a capsule primitive node to the group.
 
         Arguments:
@@ -108,11 +108,11 @@ class Viewer:
             length {float} -- capsule length
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_capsule(root_path, name, radius, length, offset)
+        self._app.append_capsule(root_path, name, radius, length, frame)
 
-    def append_cylinder(self, root_path, name, radius, length, offset=None):
+    def append_cylinder(self, root_path, name, radius, length, frame=None):
         """Append a cylinder primitive node to the group.
 
         Arguments:
@@ -122,11 +122,11 @@ class Viewer:
             length {float} -- cylinder length
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_cylinder(root_path, name, radius, length, offset)
+        self._app.append_cylinder(root_path, name, radius, length, frame)
 
-    def append_box(self, root_path, name, size, offset=None):
+    def append_box(self, root_path, name, size, frame=None):
         """Append a box primitive node to the group.
 
         Arguments:
@@ -135,11 +135,11 @@ class Viewer:
             size {Vec3} -- box size
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_box(root_path, name, size, offset)
+        self._app.append_box(root_path, name, size, frame)
 
-    def append_plane(self, root_path, name, size, offset=None):
+    def append_plane(self, root_path, name, size, frame=None):
         """Append a plane primitive node to the group.
 
         Arguments:
@@ -148,11 +148,11 @@ class Viewer:
             size {Vec2} -- plane x,y size
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_plane(root_path, name, size, offset)
+        self._app.append_plane(root_path, name, size, frame)
 
-    def append_sphere(self, root_path, name, radius, offset=None):
+    def append_sphere(self, root_path, name, radius, frame=None):
         """Append a sphere primitive node to the group.
 
         Arguments:
@@ -161,9 +161,9 @@ class Viewer:
             radius {float} -- sphere radius
 
         Keyword Arguments:
-            offset {tuple} -- local frame position and quaternion (default: {None})
+            frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_sphere(root_path, name, radius, offset)
+        self._app.append_sphere(root_path, name, radius, frame)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.
