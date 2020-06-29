@@ -9,6 +9,16 @@ class ViewerConfig:
     def __init__(self, **kwargs):
         """Construct an empty configuration and populate from @kwargs."""
         self._setings_map = {}
+
+        # disable audio by default
+        self.set_value('audio-active', False)
+        self.set_value('audio-library-name', 'null')
+        self.set_value('audio-music-active', False)
+        self.set_value('audio-sfx-active', False)
+        # hide debug/warning prints
+        self.set_value('print-pipe-types', False)
+        self.set_value('notify-level', 'error')
+
         if 'win_size' in kwargs:
             self.set_window_size(*kwargs.pop('win_size'))
         if 'antialiasing' in kwargs:

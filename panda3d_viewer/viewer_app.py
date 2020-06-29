@@ -34,14 +34,6 @@ class ViewerApp(ShowBase):
         Arguments:
             config {ViewerConfig} -- viewer configuration
         """
-        # disable audio by default
-        config.set_value('audio-active', False)
-        config.set_value('audio-library-name', 'null')
-        config.set_value('audio-music-active', False)
-        config.set_value('audio-sfx-active', False)
-        # hide debug prints
-        config.set_value('print-pipe-types', False)
-
         # load config before base init
         loadPrcFileData('', str(config))
 
