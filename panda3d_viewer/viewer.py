@@ -84,7 +84,7 @@ class Viewer:
         """
         self._app.move_nodes(root_path, name_pose_dict)
 
-    def append_mesh(self, root_path, name, mesh_path, scale):
+    def append_mesh(self, root_path, name, mesh_path, scale, offset=None):
         """Append a mesh node to the group.
 
         Arguments:
@@ -92,10 +92,13 @@ class Viewer:
             name {str} -- node name within a group
             mesh_path {str} -- path to the mesh file on disk
             scale {Vec3} -- mesh scale
-        """
-        self._app.append_mesh(root_path, name, mesh_path, scale)
 
-    def append_capsule(self, root_path, name, radius, length):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_mesh(root_path, name, mesh_path, scale, offset)
+
+    def append_capsule(self, root_path, name, radius, length, offset=None):
         """Append a capsule primitive node to the group.
 
         Arguments:
@@ -103,10 +106,13 @@ class Viewer:
             name {str} -- node name within a group
             radius {float} -- capsule radius
             length {float} -- capsule length
-        """
-        self._app.append_capsule(root_path, name, radius, length)
 
-    def append_cylinder(self, root_path, name, radius, length):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_capsule(root_path, name, radius, length, offset)
+
+    def append_cylinder(self, root_path, name, radius, length, offset=None):
         """Append a cylinder primitive node to the group.
 
         Arguments:
@@ -114,38 +120,50 @@ class Viewer:
             name {str} -- node name within a group
             radius {float} -- cylinder radius
             length {float} -- cylinder length
-        """
-        self._app.append_cylinder(root_path, name, radius, length)
 
-    def append_box(self, root_path, name, size):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_cylinder(root_path, name, radius, length, offset)
+
+    def append_box(self, root_path, name, size, offset=None):
         """Append a box primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             size {Vec3} -- box size
-        """
-        self._app.append_box(root_path, name, size)
 
-    def append_plane(self, root_path, name, size):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_box(root_path, name, size, offset)
+
+    def append_plane(self, root_path, name, size, offset=None):
         """Append a plane primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             size {Vec2} -- plane x,y size
-        """
-        self._app.append_plane(root_path, name, size)
 
-    def append_sphere(self, root_path, name, radius):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_plane(root_path, name, size, offset)
+
+    def append_sphere(self, root_path, name, radius, offset=None):
         """Append a sphere primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             radius {float} -- sphere radius
+
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_sphere(root_path, name, radius)
+        self._app.append_sphere(root_path, name, radius, offset)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.

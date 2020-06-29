@@ -8,7 +8,7 @@ from datetime import datetime
 import numpy as np
 
 from panda3d.core import Vec3, Vec4, Quat, Mat4, BitMask32
-from panda3d.core import GeomNode, TextNode
+from panda3d.core import GeomNode, TextNode, NodePath
 from panda3d.core import AmbientLight, DirectionalLight, Spotlight
 from panda3d.core import Material
 from panda3d.core import AntialiasAttrib, CullFaceAttrib, TransparencyAttrib, LightRampAttrib
@@ -165,28 +165,47 @@ class ViewerApp(ShowBase):
                 pos, quat = name_pose_dict[node.name]
                 node.set_pos_quat(Vec3(*pos), Quat(*quat))
 
-    def append_mesh(self, root_path, name, mesh_path, scale):
+    def append_node(self, root_path, name, node, offset=None):
+        """Append a node to the group.
+
+        Arguments:
+            root_path {str} -- path to the group's root node
+            name {str} -- node name within a group
+            node {NodePath} -- new node to attach to the group
+
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        root = self._groups[root_path]
+        node.reparent_to(root.attach_new_node(name))
+        if offset is not None:
+            pos, quat = offset
+            node.set_pos_quat(Vec3(*pos), Quat(*quat).multiply(node.get_quat()))
+
+    def append_mesh(self, root_path, name, mesh_path, scale=None, offset=None):
         """Append a mesh node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             mesh_path {str} -- path to the mesh file on disk
-            scale {Vec3} -- mesh scale
+
+        Keyword Arguments:
+            scale {Vec3} -- mesh scale (default: {None})
+            offset {tuple} -- local frame position and quaternion (default: {None})
         """
-        root = self._groups[root_path]
-        node = root.attach_new_node(name)
-        node.set_scale(Vec3(*scale))
-        if sum([s < 0 for s in scale]) % 2 != 0:
-            # reverse the cull order in case of negative scale values
-            node.set_attrib(CullFaceAttrib.make_reverse())
         mesh = self.loader.loadModel(mesh_path)
-        mesh.reparent_to(node)
         if mesh_path.lower().endswith('.dae'):
             # converting from Y-up to Z-up axes when import from dae
             mesh.set_mat(Mat4.yToZUpMat())
+        if scale is not None:
+            mesh.set_scale(Vec3(*scale))
+            if sum([s < 0 for s in scale]) % 2 != 0:
+                # reverse the cull order in case of negative scale values
+                mesh.set_attrib(CullFaceAttrib.make_reverse())
+        self.append_node(root_path, name, mesh, offset)
 
-    def append_capsule(self, root_path, name, radius, length):
+    def append_capsule(self, root_path, name, radius, length, offset=None):
         """Append a capsule primitive node to the group.
 
         Arguments:
@@ -194,13 +213,16 @@ class ViewerApp(ShowBase):
             name {str} -- node name within a group
             radius {float} -- capsule radius
             length {float} -- capsule length
-        """
-        geom = GeomNode(name)
-        geom.add_geom(geometry.make_capsule(radius, length))
-        root = self._groups[root_path]
-        root.attach_new_node(geom)
 
-    def append_cylinder(self, root_path, name, radius, length):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        geom = GeomNode('capsule')
+        geom.add_geom(geometry.make_capsule(radius, length))
+        node = NodePath(geom)
+        self.append_node(root_path, name, node, offset)
+
+    def append_cylinder(self, root_path, name, radius, length, offset=None):
         """Append a cylinder primitive node to the group.
 
         Arguments:
@@ -208,54 +230,66 @@ class ViewerApp(ShowBase):
             name {str} -- node name within a group
             radius {float} -- cylinder radius
             length {float} -- cylinder length
-        """
-        geom = GeomNode(name)
-        geom.add_geom(geometry.make_cylinder())
-        root = self._groups[root_path]
-        node = root.attach_new_node(geom)
-        node.set_scale(Vec3(radius, radius, length))
 
-    def append_box(self, root_path, name, size):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        geom = GeomNode('cylinder')
+        geom.add_geom(geometry.make_cylinder())
+        node = NodePath(geom)
+        node.set_scale(Vec3(radius, radius, length))
+        self.append_node(root_path, name, node, offset)
+
+    def append_box(self, root_path, name, size, offset=None):
         """Append a box primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             size {Vec3} -- box size
-        """
-        geom = GeomNode(name)
-        geom.add_geom(geometry.make_box())
-        root = self._groups[root_path]
-        node = root.attach_new_node(geom)
-        node.set_scale(Vec3(*size))
 
-    def append_plane(self, root_path, name, size):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        geom = GeomNode('box')
+        geom.add_geom(geometry.make_box())
+        node = NodePath(geom)
+        node.set_scale(Vec3(*size))
+        self.append_node(root_path, name, node, offset)
+
+    def append_plane(self, root_path, name, size, offset=None):
         """Append a plane primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             size {Vec2} -- plane x,y size
-        """
-        geom = GeomNode(name)
-        geom.add_geom(geometry.make_plane())
-        root = self._groups[root_path]
-        node = root.attach_new_node(geom)
-        node.set_scale(Vec3(size[0], size[1], 1.0))
 
-    def append_sphere(self, root_path, name, radius):
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
+        """
+        geom = GeomNode('plane')
+        geom.add_geom(geometry.make_plane())
+        node = NodePath(geom)
+        node.set_scale(Vec3(*size, 1.0))
+        self.append_node(root_path, name, node, offset)
+
+    def append_sphere(self, root_path, name, radius, offset=None):
         """Append a sphere primitive node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             radius {float} -- sphere radius
+
+        Keyword Arguments:
+            offset {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode(name)
+        geom = GeomNode('sphere')
         geom.add_geom(geometry.make_sphere())
-        root = self._groups[root_path]
-        node = root.attach_new_node(geom)
+        node = NodePath(geom)
         node.set_scale(Vec3(radius, radius, radius))
+        self.append_node(root_path, name, node, offset)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.
