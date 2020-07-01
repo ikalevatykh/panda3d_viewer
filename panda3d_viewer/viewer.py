@@ -1,7 +1,7 @@
 """This module contains Viewer, a simpe and efficient cross-platform 3D viewer."""
 
 from .viewer_config import ViewerConfig
-from .viewer_errors import ViewerError
+from .viewer_errors import ViewerError, ViewerClosedError
 
 
 __all__ = ('Viewer')
@@ -292,3 +292,18 @@ class Viewer:
         """
         self._app.step()  # render
         return self._app.get_screenshot(requested_format)
+
+    def __enter__(self):
+        """Enter the viewer context."""
+        return self
+
+    def __exit__(self, exctype, excinst, exctb):
+        """Exit the viewer context.
+
+        This method wait until a user close the window.
+        This method suppress ViewerClosedError exception if raised
+        """
+        if exctype is None:
+            self.join()  # wait until user close the window
+
+        return exctype is not None and issubclass(exctype, ViewerClosedError)
