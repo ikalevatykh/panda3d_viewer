@@ -84,16 +84,16 @@ class Viewer:
         """
         self._app.move_nodes(root_path, name_pose_dict)
 
-    def append_mesh(self, root_path, name, mesh_path, scale, frame=None):
+    def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None):
         """Append a mesh node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
             mesh_path {str} -- path to the mesh file on disk
-            scale {Vec3} -- mesh scale
 
         Keyword Arguments:
+            scale {Vec3} -- mesh scale (default: {None})
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
         self._app.append_mesh(root_path, name, mesh_path, scale, frame)
