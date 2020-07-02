@@ -1,6 +1,11 @@
 # panda3d_viewer
 A simple 3D geometry viewer based on [Panda3D](https://github.com/panda3d/panda3d) game engine.
 
+[![Travis](https://travis-ci.com/ikalevatykh/panda3d_viewer.svg?branch=master)](https://travis-ci.com/github/ikalevatykh/panda3d_viewer)
+[![PyPI](https://img.shields.io/pypi/v/panda3d_viewer)](https://pypi.org/project/panda3d-viewer)
+[![Downloads](https://pepy.tech/badge/panda3d-viewer)](https://pypi.org/project/panda3d-viewer)
+[![License: MIT](https://img.shields.io/pypi/l/panda3d_viewer)](https://opensource.org/licenses/MIT)
+
 ## Install
 
 ### Using pip
