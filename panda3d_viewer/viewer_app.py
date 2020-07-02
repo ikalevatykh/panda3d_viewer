@@ -181,7 +181,7 @@ class ViewerApp(ShowBase):
             pos, quat = frame
             node.set_pos_quat(Vec3(*pos), Quat(*quat).multiply(node.get_quat()))
 
-    def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None):
+    def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None, no_cache=None):
         """Append a mesh node to the group.
 
         Arguments:
@@ -192,8 +192,9 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             scale {Vec3} -- mesh scale (default: {None})
             frame {tuple} -- local frame position and quaternion (default: {None})
+            no_cache {bool} -- use cache to load a model (default: {None})
         """
-        mesh = self.loader.loadModel(mesh_path)
+        mesh = self.loader.loadModel(mesh_path, noCache=no_cache)
         if mesh_path.lower().endswith('.dae'):
             # converting from Y-up to Z-up axes when import from dae
             mesh.set_mat(Mat4.yToZUpMat())

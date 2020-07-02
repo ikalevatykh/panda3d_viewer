@@ -84,7 +84,7 @@ class Viewer:
         """
         self._app.move_nodes(root_path, name_pose_dict)
 
-    def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None):
+    def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None, no_cache=None):
         """Append a mesh node to the group.
 
         Arguments:
@@ -95,8 +95,9 @@ class Viewer:
         Keyword Arguments:
             scale {Vec3} -- mesh scale (default: {None})
             frame {tuple} -- local frame position and quaternion (default: {None})
+            no_cache {bool} -- use cache to load a model (default: {None})
         """
-        self._app.append_mesh(root_path, name, mesh_path, scale, frame)
+        self._app.append_mesh(root_path, name, mesh_path, scale, frame, no_cache)
 
     def append_capsule(self, root_path, name, radius, length, frame=None):
         """Append a capsule primitive node to the group.
