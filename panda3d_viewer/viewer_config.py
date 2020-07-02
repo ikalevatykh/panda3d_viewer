@@ -162,3 +162,13 @@ class ViewerConfig:
             show {bool} -- flag
         """
         self.set_value('show-floor', show)
+
+    def set_model_cache(self, cache_dir, cache_textures=True):
+        """Set model cache parameters.
+
+        Arguments:
+            cache_dir {str} -- path to the cache folder on disk
+            cache_textures {bool} -- enable textures caching
+        """
+        self.set_value('model-cache-dir', cache_dir)
+        self.set_value('model-cache-textures', cache_textures)
