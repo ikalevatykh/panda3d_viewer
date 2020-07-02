@@ -151,13 +151,18 @@ class ViewerApp(ShowBase):
 
         Arguments:
             root_path {str} -- path to the group's root node
-            name_pose_dict {dict} -- {node_name : (pos, quat)} dictionary
+            name_pose_dict {dict} -- {node_name : (pos, quat) | mat44} dictionary
         """
         root = self._groups[root_path]
         for node in root.getChildren():
             if node.name in name_pose_dict:
-                pos, quat = name_pose_dict[node.name]
-                node.set_pos_quat(Vec3(*pos), Quat(*quat))
+                pose = name_pose_dict[node.name]
+                if isinstance(pose, np.ndarray):
+                    mat = pose.T.flatten()
+                    node.set_mat(Mat4(*mat))
+                else:
+                    pos, quat = pose
+                    node.set_pos_quat(Vec3(*pos), Quat(*quat))
 
     def append_node(self, root_path, name, node, frame=None):
         """Append a node to the group.

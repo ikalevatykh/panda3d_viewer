@@ -80,7 +80,7 @@ class Viewer:
 
         Arguments:
             root_path {str} -- path to the group's root node
-            name_pose_dict {dict} -- {node_name : (pos, quat)} dictionary
+            name_pose_dict {dict} -- {node_name : (pos, quat) | mat44} dictionary
         """
         self._app.move_nodes(root_path, name_pose_dict)
 
