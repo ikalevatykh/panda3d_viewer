@@ -75,3 +75,6 @@ class ViewerAppProxy(mp.Process):
         else:
             self._proc_conn.send(ViewerClosedError(
                 'User closed the main window'))
+        # read the rest to prevent the host process from being blocked
+        if self._proc_conn.poll(0.05):
+            self._proc_conn.recv()
