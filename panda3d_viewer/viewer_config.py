@@ -81,6 +81,14 @@ class ViewerConfig:
         """
         self.set_value('win-fixed-size', fixed)
 
+    def set_scene_scale(self, scale):
+        """Set scene scale factor.
+
+        Arguments:
+            scale {float} -- scale factor for all geometries into the scene
+        """
+        self.set_value('scene-scale', scale)
+
     def enable_antialiasing(self, enable, multisamples):
         """Enable antialiasing.
 

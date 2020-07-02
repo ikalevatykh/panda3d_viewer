@@ -76,6 +76,8 @@ class ViewerApp(ShowBase):
         self.show_floor(self.config.GetBool('show-floor', False))
 
         self._scene_root = self.render.attach_new_node('scene_root')
+        self._scene_scale = self.config.GetFloat('scene-scale', 1.0)
+        self._scene_root.set_scale(self._scene_scale)
         self._groups = {}
 
         if self.windowType == 'onscreen':
