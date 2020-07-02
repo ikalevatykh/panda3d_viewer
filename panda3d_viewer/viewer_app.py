@@ -291,6 +291,41 @@ class ViewerApp(ShowBase):
         node.set_scale(Vec3(radius, radius, radius))
         self.append_node(root_path, name, node, frame)
 
+    def append_point_cloud(self, root_path, name, vertices, thickness=1, static=True, frame=None):
+        """Append a point cloud node to the group.
+
+        Arguments:
+            root_path {str} -- path to the group's root node
+            name {str} -- node name within a group
+            vertices {list} -- point coordinates
+
+        Keyword Arguments:
+            thickness {int} -- points thickness (default: {1})
+            static {bool} -- points will not change often (default: {True})
+            frame {tuple} -- local frame position and quaternion (default: {None})
+        """
+        geom = GeomNode('pcloud')
+        geom.add_geom(geometry.make_point_cloud(vertices, static))
+        node = NodePath(geom)
+        node.set_light_off()
+        node.set_render_mode_wireframe()
+        node.set_render_mode_thickness(thickness)
+        node.set_antialias(AntialiasAttrib.MPoint)
+        node.hide(self.LightMask)
+        self.append_node(root_path, name, node, frame)
+
+    def update_point_cloud(self, root_path, name, vertices):
+        """Update existing point cloud.
+
+        Arguments:
+            root_path {str} -- path to the group's root node
+            name {str} -- node name within a group
+            vertices {list} -- point coordinates
+        """
+        node = self._groups[root_path].find(name).children[0].node()
+        geom = node.modify_geom(0)
+        geometry.update_point_cloud(geom, vertices)
+
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.
 

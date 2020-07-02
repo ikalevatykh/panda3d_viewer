@@ -3,13 +3,14 @@
 # pylint: disable=invalid-name, too-many-locals
 
 import itertools
-import numpy as np
 
-from panda3d.core import Geom, GeomLines, GeomTriangles
-from panda3d.core import GeomVertexFormat, GeomVertexData, GeomVertexWriter
+import numpy as np
+from panda3d.core import (Geom, GeomLines, GeomPoints, GeomTriangles,
+                          GeomVertexData, GeomVertexFormat, GeomVertexWriter)
 
 __all__ = ('make_axes', 'make_grid', 'make_cylinder',
-           'make_box', 'make_plane', 'make_sphere')
+           'make_box', 'make_plane', 'make_sphere',
+           'make_point_cloud', 'update_point_cloud')
 
 
 def make_axes():
@@ -253,3 +254,43 @@ def make_sphere(num_segments=16, num_rings=16):
         Geom -- p3d geometry
     """
     return make_capsule(1.0, 0.0, num_segments, num_rings)
+
+
+def make_point_cloud(vertices, static=True):
+    """[summary]
+
+    Arguments:
+        vertices {list} -- point coordinates
+
+    Keyword Arguments:
+        static {bool} -- points will not change often (default: {True})
+
+    Returns:
+        Geom -- p3d geometry
+    """
+    vformat = GeomVertexFormat.get_v3()
+    vtype = Geom.UHStatic if static else Geom.UHDynamic
+    vdata = GeomVertexData('vdata', vformat, vtype)
+
+    vdata.unclean_set_num_rows(len(vertices))
+    data = np.asarray(vertices, np.float32).tostring()
+    vdata.modify_array_handle(0).set_data(data)
+
+    prim = GeomPoints(Geom.UHStatic)
+    prim.add_consecutive_vertices(0, len(vertices))
+
+    geom = Geom(vdata)
+    geom.add_primitive(prim)
+    return geom
+
+
+def update_point_cloud(geom, vertices):
+    """Update existing point cloud
+
+    Arguments:
+        geom {Geom} -- p3d geometry
+        vertices {list} -- new point coordinates
+    """
+    vdata = geom.modify_vertex_data()
+    data = np.asarray(vertices, np.float32).tostring()
+    vdata.modify_array_handle(0).set_data(data)

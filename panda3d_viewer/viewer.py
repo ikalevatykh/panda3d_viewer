@@ -166,6 +166,31 @@ class Viewer:
         """
         self._app.append_sphere(root_path, name, radius, frame)
 
+    def append_point_cloud(self, root_path, name, vertices, thickness=1, static=True, frame=None):
+        """Append a point cloud node to the group.
+
+        Arguments:
+            root_path {str} -- path to the group's root node
+            name {str} -- node name within a group
+            vertices {list} -- point coordinates
+
+        Keyword Arguments:
+            thickness {int} -- points thickness (default: {1})
+            static {bool} -- points will not change (default: {True})
+            frame {tuple} -- local frame position and quaternion (default: {None})
+        """
+        self._app.append_point_cloud(root_path, name, vertices, thickness, static, frame)
+
+    def update_point_cloud(self, root_path, name, vertices):
+        """Update existing point cloud.
+
+        Arguments:
+            root_path {str} -- path to the group's root node
+            name {str} -- node name within a group
+            vertices {list} -- point coordinates
+        """
+        self._app.update_point_cloud(root_path, name, vertices)
+
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.
 
