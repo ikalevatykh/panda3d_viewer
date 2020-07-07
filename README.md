@@ -90,7 +90,7 @@ with imageio.get_writer('sphere_anim.gif', mode='I') as writer:
         writer.append_data(image_rgb)
 ```
 
-### Render pointcloud
+### Render a point cloud
 
 ![Point cloud](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/point_cloud.png?raw=true "Point cloud")
 
@@ -121,6 +121,47 @@ with Viewer(show_grid=False) as viewer:
 
 [Pinocchio](https://github.com/stack-of-tasks/pinocchio/) is a library for rigid multi-body dynamics computation. To see how to use this package with Pinocchio see [example 1](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer.py), [example 2](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer-play.py).
 
+
+### Visualize the point cloud from a RealSense camera
+
+![RealSense](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/realsense.png "RealSense")
+
+```python
+import numpy as np
+import pyrealsense2 as rs
+from panda3d_viewer import Viewer, ViewerConfig
+
+config = rs.config()
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+
+pipeline = rs.pipeline()
+pipeline.start(config)
+pc = rs.pointcloud()
+
+camera_frame = (0, 0, 0.2), (0.7071, -0.7071, 0, 0)
+
+with Viewer(window_title='RealSense') as viewer:
+    viewer.append_group('root', scale=2)
+    viewer.append_cloud('root', 'camera', thickness=4, frame=camera_frame)
+
+    while True:
+        frames = pipeline.wait_for_frames()
+        color = frames.get_color_frame()
+        depth = frames.get_depth_frame()
+        if color and depth:
+            pc.map_to(color)
+            points = pc.calculate(depth)
+            vertices = np.asarray(points.get_vertices())
+            texture_coords = np.asanyarray(points.get_texture_coordinates())
+            texture_image = np.asanyarray(color.get_data())
+
+            viewer.set_cloud_data(
+                'root', 'camera',
+                vertices=vertices,
+                texture_coords=texture_coords,
+                texture_image=texture_image)
+```
 
 ## API
 
