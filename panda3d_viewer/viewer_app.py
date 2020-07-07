@@ -276,7 +276,7 @@ class ViewerApp(ShowBase):
         geom_node = GeomNode('plane')
         geom_node.add_geom(geometry.make_plane())
         node = NodePath(geom_node)
-        node.set_scale(Vec3(*size, 1.0))
+        node.set_scale(Vec3(size[0], size[1], 1.0))
         self.append_node(root_path, name, node, frame)
 
     def append_sphere(self, root_path, name, radius, frame=None):
