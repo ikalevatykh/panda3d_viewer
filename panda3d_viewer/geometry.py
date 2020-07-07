@@ -274,7 +274,7 @@ def make_points(vertices, colors=None, texture_coords=None, geom=None):
         Geom -- p3d geometry
     """
     if not isinstance(vertices, np.ndarray):
-        vertices = np.array(vertices, dtype=np.float32)
+        vertices = np.asarray(vertices, dtype=np.float32)
 
     if colors is not None:
         if not isinstance(colors, np.ndarray):
