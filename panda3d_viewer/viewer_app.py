@@ -156,12 +156,12 @@ class ViewerApp(ShowBase):
         root = self._groups[root_path]
         for node in root.getChildren():
             if node.name in name_pose_dict:
-                pose = name_pose_dict[node.name]
-                if isinstance(pose, np.ndarray):
-                    mat = pose.T.flatten()
+                frame = name_pose_dict[node.name]
+                if isinstance(frame, np.ndarray):
+                    mat = frame.T.flatten()
                     node.set_mat(Mat4(*mat))
                 else:
-                    pos, quat = pose
+                    pos, quat = frame
                     node.set_pos_quat(Vec3(*pos), Quat(*quat))
 
     def append_node(self, root_path, name, node, frame=None):
@@ -178,7 +178,12 @@ class ViewerApp(ShowBase):
         root = self._groups[root_path]
         node.reparent_to(root.attach_new_node(name))
         if frame is not None:
-            pos, quat = frame
+            if isinstance(frame, np.ndarray):
+                pos = frame[:3, 3]
+                quat = Quat()
+                quat.set_from_matrix(Mat4(*frame.T.flatten()))
+            else:
+                pos, quat = frame
             node.set_pos_quat(Vec3(*pos), Quat(*quat).multiply(node.get_quat()))
 
     def append_mesh(self, root_path, name, mesh_path, scale=None, frame=None, no_cache=None):
@@ -217,9 +222,9 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('capsule')
-        geom.add_geom(geometry.make_capsule(radius, length))
-        node = NodePath(geom)
+        geom_node = GeomNode('capsule')
+        geom_node.add_geom(geometry.make_capsule(radius, length))
+        node = NodePath(geom_node)
         self.append_node(root_path, name, node, frame)
 
     def append_cylinder(self, root_path, name, radius, length, frame=None):
@@ -234,9 +239,9 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('cylinder')
-        geom.add_geom(geometry.make_cylinder())
-        node = NodePath(geom)
+        geom_node = GeomNode('cylinder')
+        geom_node.add_geom(geometry.make_cylinder())
+        node = NodePath(geom_node)
         node.set_scale(Vec3(radius, radius, length))
         self.append_node(root_path, name, node, frame)
 
@@ -251,9 +256,9 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('box')
-        geom.add_geom(geometry.make_box())
-        node = NodePath(geom)
+        geom_node = GeomNode('box')
+        geom_node.add_geom(geometry.make_box())
+        node = NodePath(geom_node)
         node.set_scale(Vec3(*size))
         self.append_node(root_path, name, node, frame)
 
@@ -268,9 +273,9 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('plane')
-        geom.add_geom(geometry.make_plane())
-        node = NodePath(geom)
+        geom_node = GeomNode('plane')
+        geom_node.add_geom(geometry.make_plane())
+        node = NodePath(geom_node)
         node.set_scale(Vec3(*size, 1.0))
         self.append_node(root_path, name, node, frame)
 
@@ -285,28 +290,25 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('sphere')
-        geom.add_geom(geometry.make_sphere())
-        node = NodePath(geom)
+        geom_node = GeomNode('sphere')
+        geom_node.add_geom(geometry.make_sphere())
+        node = NodePath(geom_node)
         node.set_scale(Vec3(radius, radius, radius))
         self.append_node(root_path, name, node, frame)
 
-    def append_point_cloud(self, root_path, name, vertices, thickness=1, static=True, frame=None):
+    def append_cloud(self, root_path, name, thickness=1, frame=None):
         """Append a point cloud node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            vertices {list} -- point coordinates
 
         Keyword Arguments:
             thickness {int} -- points thickness (default: {1})
-            static {bool} -- points will not change often (default: {True})
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        geom = GeomNode('pcloud')
-        geom.add_geom(geometry.make_point_cloud(vertices, static))
-        node = NodePath(geom)
+        geom_node = GeomNode('cloud')
+        node = NodePath(geom_node)
         node.set_light_off()
         node.set_render_mode_wireframe()
         node.set_render_mode_thickness(thickness)
@@ -314,17 +316,25 @@ class ViewerApp(ShowBase):
         node.hide(self.LightMask)
         self.append_node(root_path, name, node, frame)
 
-    def update_point_cloud(self, root_path, name, vertices):
+    def set_cloud_data(self, root_path, name, vertices, colors=None, texture_coords=None):
         """Update existing point cloud.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            vertices {list} -- point coordinates
+            vertices {list} -- point coordinates (and other data in a point cloud format)
+
+        Keyword Arguments:
+            colors {list} -- optional colors (default: {None})
+            texture_coords {list} -- optional texture coordinates (default: {None})
         """
-        node = self._groups[root_path].find(name).children[0].node()
-        geom = node.modify_geom(0)
-        geometry.update_point_cloud(geom, vertices)
+        geom_node = self._groups[root_path].find(name).children[0].node()
+        if geom_node.get_num_geoms() == 0:
+            geom = geometry.make_points(vertices, colors, texture_coords)
+            geom_node.add_geom(geom)
+        else:
+            geom = geom_node.modify_geom(0)
+            geometry.make_points(vertices, colors, texture_coords, geom)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.

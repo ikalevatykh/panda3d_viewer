@@ -166,30 +166,32 @@ class Viewer:
         """
         self._app.append_sphere(root_path, name, radius, frame)
 
-    def append_point_cloud(self, root_path, name, vertices, thickness=1, static=True, frame=None):
+    def append_cloud(self, root_path, name, thickness=1, frame=None):
         """Append a point cloud node to the group.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            vertices {list} -- point coordinates
 
         Keyword Arguments:
             thickness {int} -- points thickness (default: {1})
-            static {bool} -- points will not change (default: {True})
             frame {tuple} -- local frame position and quaternion (default: {None})
         """
-        self._app.append_point_cloud(root_path, name, vertices, thickness, static, frame)
+        self._app.append_cloud(root_path, name, thickness, frame)
 
-    def update_point_cloud(self, root_path, name, vertices):
+    def set_cloud_data(self, root_path, name, vertices, colors=None, texture_coords=None):
         """Update existing point cloud.
 
         Arguments:
             root_path {str} -- path to the group's root node
             name {str} -- node name within a group
-            vertices {list} -- point coordinates
+            vertices {list} -- point coordinates (and other data in a point cloud format)
+
+        Keyword Arguments:
+            colors {list} -- optional colors (default: {None})
+            texture_coords {list} -- optional texture coordinates (default: {None})
         """
-        self._app.update_point_cloud(root_path, name, vertices)
+        self._app.set_cloud_data(root_path, name, vertices, colors, texture_coords)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.

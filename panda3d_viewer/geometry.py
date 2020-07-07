@@ -8,9 +8,10 @@ import numpy as np
 from panda3d.core import (Geom, GeomLines, GeomPoints, GeomTriangles,
                           GeomVertexData, GeomVertexFormat, GeomVertexWriter)
 
-__all__ = ('make_axes', 'make_grid', 'make_cylinder',
-           'make_box', 'make_plane', 'make_sphere',
-           'make_point_cloud', 'update_point_cloud')
+from .viewer_errors import ViewerError
+
+__all__ = ('make_axes', 'make_grid', 'make_cylinder', 'make_box', 'make_plane',
+           'make_sphere', 'make_points')
 
 
 def make_axes():
@@ -256,41 +257,70 @@ def make_sphere(num_segments=16, num_rings=16):
     return make_capsule(1.0, 0.0, num_segments, num_rings)
 
 
-def make_point_cloud(vertices, static=True):
-    """[summary]
+def make_points(vertices, colors=None, texture_coords=None, geom=None):
+    """Make or update existing points set geometry.
 
     Arguments:
-        vertices {list} -- point coordinates
+        root_path {str} -- path to the group's root node
+        name {str} -- node name within a group
+        vertices {list} -- point coordinates (and other data in a point cloud format)
 
     Keyword Arguments:
-        static {bool} -- points will not change often (default: {True})
+        colors {list} -- colors (default: {None})
+        texture_coords {list} -- texture coordinates (default: {None})
+        geom {Geom} -- geometry to update (default: {None})
 
     Returns:
         Geom -- p3d geometry
     """
-    vformat = GeomVertexFormat.get_v3()
-    vtype = Geom.UHStatic if static else Geom.UHDynamic
-    vdata = GeomVertexData('vdata', vformat, vtype)
+    if not isinstance(vertices, np.ndarray):
+        vertices = np.array(vertices, dtype=np.float32)
 
-    vdata.unclean_set_num_rows(len(vertices))
-    data = np.asarray(vertices, np.float32).tostring()
-    vdata.modify_array_handle(0).set_data(data)
+    if colors is not None:
+        if not isinstance(colors, np.ndarray):
+            colors = np.asanyarray(colors)
+        if colors.dtype != np.uint8:
+            colors = np.uint8(colors * 255)
+        colors_zip = np.frombuffer(colors.tostring(), np.float32)
+        vertices = np.column_stack((vertices, colors_zip))
 
-    prim = GeomPoints(Geom.UHStatic)
-    prim.add_consecutive_vertices(0, len(vertices))
+    if texture_coords is not None:
+        if not isinstance(texture_coords, np.ndarray):
+            texture_coords = np.asanyarray(texture_coords)
+        vertices = np.column_stack((vertices, texture_coords))
 
-    geom = Geom(vdata)
-    geom.add_primitive(prim)
+    data = vertices.tostring()
+
+    if geom is None:
+        if vertices.strides[0] == 12:
+            vformat = GeomVertexFormat.get_v3()
+        elif vertices.strides[0] == 16:
+            vformat = GeomVertexFormat.get_v3c4()
+        elif vertices.strides[0] == 20:
+            vformat = GeomVertexFormat.get_v3t2()
+        else:
+            raise ViewerError('Incompatible point clout format: {},{}'.format(
+                vertices.dtype, vertices.shape))
+
+        vdata = GeomVertexData('vdata', vformat, Geom.UHDynamic)
+        vdata.unclean_set_num_rows(len(vertices))
+        vdata.modify_array_handle(0).set_subdata(0, len(data), data)
+
+        prim = GeomPoints(Geom.UHDynamic)
+        prim.clear_vertices()
+        prim.add_consecutive_vertices(0, len(vertices))
+        prim.close_primitive()
+
+        geom = Geom(vdata)
+        geom.add_primitive(prim)
+    else:
+        vdata = geom.modify_vertex_data()
+        vdata.unclean_set_num_rows(len(vertices))
+        vdata.modify_array_handle(0).set_subdata(0, len(data), data)
+
+        prim = geom.modify_primitive(0)
+        prim.clear_vertices()
+        prim.add_consecutive_vertices(0, len(vertices))
+        prim.close_primitive()
+
     return geom
-
-
-def update_point_cloud(geom, vertices):
-    """Update existing point cloud
-
-    Arguments:
-        geom {Geom} -- p3d geometry
-        vertices {list} -- new point coordinates
-    """
-    vdata = geom.modify_vertex_data()
-    data = np.asarray(vertices, np.float32).tostring()
-    vdata.modify_array_handle(0).set_data(data)
