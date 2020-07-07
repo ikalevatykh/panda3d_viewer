@@ -9,4 +9,4 @@ from .viewer_errors import ViewerClosedError, ViewerError
 
 __all__ = ('Viewer', 'ViewerConfig', 'ViewerError', 'ViewerClosedError')
 
-__version__ = '0.2.0'
+__version__ = '0.3.0-dev'
