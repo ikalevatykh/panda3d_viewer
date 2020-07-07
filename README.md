@@ -90,11 +90,37 @@ with imageio.get_writer('sphere_anim.gif', mode='I') as writer:
         writer.append_data(image_rgb)
 ```
 
+### Render pointcloud
+
+![Point cloud](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/point_cloud.png?raw=true "Point cloud")
+
+```python
+import numpy as np
+import time
+
+from panda3d_viewer import Viewer, ViewerConfig
+
+with Viewer(show_grid=False) as viewer:
+    viewer.reset_camera((10, 10, 15), look_at=(0, 0, 0))
+    viewer.append_group('root')
+    viewer.append_cloud('root', 'cloud', thickness=4)
+
+    while True:
+        vertices = np.random.randn(300000, 3).astype(np.float32)
+        colors = np.ones((300000, 4), np.float32)
+        colors[:, :3] = np.clip(np.abs(vertices), 0, 3) / 3
+        viewer.set_cloud_data('root', 'cloud', vertices, colors)
+        time.sleep(0.03)
+```
+
+## Robotic examples
+
 ### Using with Pinocchio
 
 ![Pinocchio robots](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/pinocchio.png?raw=true "Pinocchio robots")
 
 [Pinocchio](https://github.com/stack-of-tasks/pinocchio/) is a library for rigid multi-body dynamics computation. To see how to use this package with Pinocchio see [example 1](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer.py), [example 2](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/panda3d-viewer-play.py).
+
 
 ## API
 
