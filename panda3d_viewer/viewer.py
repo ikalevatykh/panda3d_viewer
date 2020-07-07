@@ -10,7 +10,7 @@ __all__ = ('Viewer')
 class Viewer:
     """A Panda3D based viewer."""
 
-    def __init__(self, window_title=None, window_type='onscreen', config=None):
+    def __init__(self, window_title=None, window_type='onscreen', config=None, **kwargs):
         """Open a window, setup a scene.
 
         Keyword Arguments:
@@ -19,7 +19,7 @@ class Viewer:
             config {ViewerConfig} -- viewer configuration (default: {None})
         """
         if config is None:
-            config = ViewerConfig()
+            config = ViewerConfig(**kwargs)
         if window_title is not None:
             config.set_window_title(window_title)
 
