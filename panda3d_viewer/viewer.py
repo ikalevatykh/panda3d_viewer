@@ -179,7 +179,8 @@ class Viewer:
         """
         self._app.append_cloud(root_path, name, thickness, frame)
 
-    def set_cloud_data(self, root_path, name, vertices, colors=None, texture_coords=None):
+    def set_cloud_data(self, root_path, name, vertices, colors=None,
+                       texture_coords=None, texture_image=None):
         """Update existing point cloud.
 
         Arguments:
@@ -190,8 +191,9 @@ class Viewer:
         Keyword Arguments:
             colors {list} -- optional colors (default: {None})
             texture_coords {list} -- optional texture coordinates (default: {None})
+            texture_image {np.ndarray} -- texture image (default: {None})
         """
-        self._app.set_cloud_data(root_path, name, vertices, colors, texture_coords)
+        self._app.set_cloud_data(root_path, name, vertices, colors, texture_coords, texture_image)
 
     def set_material(self, root_path, name, color_rgba, texture_path=''):
         """Override material of a node.

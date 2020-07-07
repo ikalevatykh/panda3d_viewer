@@ -10,7 +10,7 @@ import numpy as np
 from panda3d.core import Vec3, Vec4, Quat, Mat4, BitMask32
 from panda3d.core import GeomNode, TextNode, NodePath
 from panda3d.core import AmbientLight, DirectionalLight, Spotlight
-from panda3d.core import Material
+from panda3d.core import Material, Texture
 from panda3d.core import AntialiasAttrib, CullFaceAttrib, TransparencyAttrib, LightRampAttrib
 from panda3d.core import PNMImage, Fog
 from panda3d.core import loadPrcFileData
@@ -316,7 +316,8 @@ class ViewerApp(ShowBase):
         node.hide(self.LightMask)
         self.append_node(root_path, name, node, frame)
 
-    def set_cloud_data(self, root_path, name, vertices, colors=None, texture_coords=None):
+    def set_cloud_data(self, root_path, name, vertices, colors=None,
+                       texture_coords=None, texture_image=None):
         """Update existing point cloud.
 
         Arguments:
@@ -327,8 +328,11 @@ class ViewerApp(ShowBase):
         Keyword Arguments:
             colors {list} -- optional colors (default: {None})
             texture_coords {list} -- optional texture coordinates (default: {None})
+            texture_image {np.ndarray} -- texture image (default: {None})
         """
-        geom_node = self._groups[root_path].find(name).children[0].node()
+        node = self._groups[root_path].find(name).children[0]
+
+        geom_node = node.node()
         if geom_node.get_num_geoms() == 0:
             geom = geometry.make_points(vertices, colors, texture_coords)
             geom_node.add_geom(geom)
@@ -336,7 +340,21 @@ class ViewerApp(ShowBase):
             geom = geom_node.modify_geom(0)
             geometry.make_points(vertices, colors, texture_coords, geom)
 
-    def set_material(self, root_path, name, color_rgba, texture_path=''):
+        if texture_image is not None:
+            height, width, _ = texture_image.shape
+            data = texture_image.tostring()
+            texture = node.find_texture('cloud_tex')
+            if texture is None:
+                texture = Texture('cloud_tex')
+                texture.setup_2d_texture(width, height, Texture.T_unsigned_byte, Texture.F_rgb)
+                texture.set_wrap_u(Texture.WM_border_color)
+                texture.set_wrap_v(Texture.WM_border_color)
+                texture.set_ram_image(data)
+                node.set_texture(texture)
+            else:
+                texture.set_ram_image(data)
+
+    def set_material(self, root_path, name, color=None, texture_path=''):
         """Override material of a node.
 
         Arguments:
@@ -345,20 +363,22 @@ class ViewerApp(ShowBase):
             color {Vec4} -- color RGBA
 
         Keyword Arguments:
-            texture_path {str} -- path to the texture file on disk (default: {''})
+            texture {str | np.ndarray} -- path to the texture file on disk  (default: {None})
         """
         node = self._groups[root_path].find(name)
-        node.set_color(Vec4(*color_rgba))
 
-        material = Material()
-        material.set_ambient(Vec4(*color_rgba))
-        material.set_diffuse(Vec4(*color_rgba))
-        material.set_specular(Vec3(1, 1, 1))
-        material.set_roughness(0.4)
-        node.set_material(material, 1)
+        if color is not None:
+            node.set_color(Vec4(*color))
 
-        if color_rgba[3] < 1:
-            node.set_transparency(TransparencyAttrib.M_alpha)
+            material = Material()
+            material.set_ambient(Vec4(*color))
+            material.set_diffuse(Vec4(*color))
+            material.set_specular(Vec3(1, 1, 1))
+            material.set_roughness(0.4)
+            node.set_material(material, 1)
+
+            if color[3] < 1:
+                node.set_transparency(TransparencyAttrib.M_alpha)
 
         if texture_path:
             texture = self.loader.load_texture(texture_path)

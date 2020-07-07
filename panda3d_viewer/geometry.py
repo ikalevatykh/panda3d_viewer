@@ -278,16 +278,19 @@ def make_points(vertices, colors=None, texture_coords=None, geom=None):
 
     if colors is not None:
         if not isinstance(colors, np.ndarray):
-            colors = np.asanyarray(colors)
+            colors = np.asarray(colors)
         if colors.dtype != np.uint8:
             colors = np.uint8(colors * 255)
-        colors_zip = np.frombuffer(colors.tostring(), np.float32)
-        vertices = np.column_stack((vertices, colors_zip))
+        vertices = np.column_stack((
+            vertices.view(dtype=np.uint32).reshape(-1, 3),
+            colors.view(dtype=np.uint32)))
 
     if texture_coords is not None:
         if not isinstance(texture_coords, np.ndarray):
-            texture_coords = np.asanyarray(texture_coords)
-        vertices = np.column_stack((vertices, texture_coords))
+            texture_coords = np.asarray(texture_coords)
+        vertices = np.column_stack((
+            vertices.view(dtype=np.uint32).reshape(-1, 3),
+            texture_coords.view(dtype=np.uint32).reshape(-1, 2)))
 
     data = vertices.tostring()
 
