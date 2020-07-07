@@ -650,7 +650,7 @@ class ViewerApp(ShowBase):
 
         def section(title, items):
             return '{}:\n'.format(title) + \
-                '\n'.join((' {}:\t{}'.format(l, k) for l, k in items))
+                '\n'.join((' {}:\t{}'.format(h, k) for h, k in items))
 
         keyboard = (
             ("Show help", "F1, h"),
