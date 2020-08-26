@@ -124,7 +124,7 @@ with Viewer(show_grid=False) as viewer:
 
 ### Visualize the point cloud from a RealSense camera
 
-![RealSense](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/realsense.png "RealSense")
+![RealSense](https://github.com/ikalevatykh/panda3d_viewer/blob/master/images/realsense.png?raw=true "RealSense")
 
 ```python
 import numpy as np
