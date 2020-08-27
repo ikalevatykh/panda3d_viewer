@@ -1,4 +1,4 @@
-"""This package contains Viewer, a simpe and efficient cross-platform 3D viewer based on Panda3D."""
+"""This package contains Viewer, a simpe and efficient cross-platform Panda3D based 3D viewer."""
 
 from .viewer import Viewer
 from .viewer_config import ViewerConfig
