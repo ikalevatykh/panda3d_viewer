@@ -45,6 +45,12 @@ class Viewer:
     def stop(self):
         """Stop the application."""
         self._app.stop()
+        self.destroy()
+
+    def destroy(self):
+        """Destroy the application and free all resources."""
+        if self._window_type == 'offscreen':
+            self._app.destroy()
 
     def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
@@ -335,5 +341,5 @@ class Viewer:
         """
         if exctype is None:
             self.join()  # wait until user close the window
-
+        self.destroy()
         return exctype is not None and issubclass(exctype, ViewerClosedError)
