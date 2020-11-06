@@ -511,7 +511,8 @@ class ViewerApp(ShowBase):
         Arguments:
             color_rgb {tuple} -- RGB color value
         """
-        self.win.set_clear_color(Vec3(*color_rgb))
+        self.win.set_clear_color_active(True)
+        self.win.set_clear_color(Vec4(*color_rgb, z=1.0))
         self._fog.set_color(Vec3(*color_rgb))
 
     def save_screenshot(self, filename=None):
