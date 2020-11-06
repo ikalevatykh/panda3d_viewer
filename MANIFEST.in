@@ -1,5 +1,6 @@
 include README.md LICENSE
 include *.txt
+include *.py
 include .bumpversion.cfg
 include .pylintrc
 include pyproject.toml
