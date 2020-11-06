@@ -38,4 +38,5 @@ setup(
     keywords='rendering graphics 3d visualization',
     packages=find_packages(),
     install_requires=['numpy', 'panda3d>=1.10'],
+    include_package_data=True,
 )
