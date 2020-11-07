@@ -512,8 +512,13 @@ class ViewerApp(ShowBase):
             color_rgb {tuple} -- RGB color value
         """
         self.win.set_clear_color_active(True)
-        self.win.set_clear_color(Vec4(*color_rgb, z=1.0))
-        self._fog.set_color(Vec3(*color_rgb))
+        if len(color_rgb) == 3:
+            r, g, b = color_rgb
+            a = 1.0
+        else:
+            r, g, b, a = color_rgb
+        self.win.set_clear_color(Vec4(r, g, b, a))
+        self._fog.set_color(Vec3(r, g, b))
 
     def save_screenshot(self, filename=None):
         """Capture a screenshot from the main window and write image to disk.
