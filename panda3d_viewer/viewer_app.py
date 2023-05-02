@@ -383,6 +383,7 @@ class ViewerApp(ShowBase):
         if texture_path:
             texture = self.loader.load_texture(texture_path)
             node.set_texture(texture)
+            node.setTransparency(True)
 
     def set_materials(self, root_path, name_material_dict):
         """Override material of nodes within a group.
