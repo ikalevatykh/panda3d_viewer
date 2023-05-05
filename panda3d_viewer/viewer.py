@@ -2,7 +2,8 @@
 
 from .viewer_config import ViewerConfig
 from .viewer_errors import ViewerError, ViewerClosedError
-
+from direct.task import Task
+import cv2 as cv
 
 __all__ = ('Viewer')
 
@@ -10,13 +11,14 @@ __all__ = ('Viewer')
 class Viewer:
     """A Panda3D based viewer."""
 
-    def __init__(self, window_title=None, window_type='onscreen', config=None, **kwargs):
+    def __init__(self, window_title=None, window_type='onscreen', config=None, event_manager=None, **kwargs):
         """Open a window, setup a scene.
 
         Keyword Arguments:
             window_title {str} -- window title (default: {'Viewer'})
             window_type {str} -- window type, one of onscreen, offscreen (default: {'onscreen'})
             config {ViewerConfig} -- viewer configuration (default: {None})
+            event_manager {EventHandler} -- viewer event manager (default: {None})
         """
         if config is None:
             config = ViewerConfig(**kwargs)
@@ -36,7 +38,7 @@ class Viewer:
             self._app = ViewerApp(config)
         else:
             raise ViewerError('Unknown window type: {}'.format(window_type))
-
+        
     def join(self):
         """Run the application until the user close the main window."""
         if self._window_type == 'onscreen':
@@ -51,6 +53,27 @@ class Viewer:
         """Destroy the application and free all resources."""
         if self._window_type == 'offscreen':
             self._app.destroy()
+    
+    def add_task(self, task, name, extraArgs = [], appendTask=True):
+        '''Add a task to a taskMgr
+
+        Arguments:
+            task {fun} -- task to add
+            name {str} -- name of the task
+        
+        Return:
+            task {task obj}
+        '''
+        return self._app.add_task(task, name, extraArgs = extraArgs, appendTask = appendTask)
+
+    def remove_task(self, task):
+        '''Remove a task from a taskMgr
+
+        Arguments:
+            task {obg | str} -- task to remove
+        '''
+        self._app.remove_task(task)
+
 
     def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
@@ -328,6 +351,24 @@ class Viewer:
         """
         self._app.step()  # render
         return self._app.get_screenshot(requested_format)
+    
+    def save_movie(self, path = './output.avi', codec = 'XVID', fps = 30, duration = 10):
+        """Capture and return a screenshot from offscreen buffer.
+
+        Keyword Arguments:
+            path {str} -- path and name of the output file (default: {'./output.avi'}) 
+            codec {str} -- codec to use DIVX, XVID, MJPG, X264, WMV1, WMV2, MJPG, see doc of openCv
+            fps {int} -- fps of the video
+            duration {int} -- length of video
+        """
+        imm = self.get_screenshot()
+        out = cv.VideoWriter(path, cv.VideoWriter_fourcc(*codec), fps, (imm.shape[1], imm.shape[0]), True)
+        out.write(imm)
+        for _ in range(fps * duration):
+            print('for')
+            imm = self.get_screenshot()
+            out.write(imm[:,:,:3])
+        out = None
 
     def __enter__(self):
         """Enter the viewer context."""

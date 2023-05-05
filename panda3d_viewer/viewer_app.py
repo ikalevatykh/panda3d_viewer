@@ -105,6 +105,26 @@ class ViewerApp(ShowBase):
         """User closed the main window."""
         self.stop()
 
+    def add_task(self, task, name, extraArgs = [], appendTask=True):
+        '''Add a task to a taskMgr
+
+        Arguments:
+            task {fun} -- task to add
+            name {str} -- name of the task
+        
+        Return:
+            task {task obj}
+        '''
+        return self.task_mgr.add(task, name, extraArgs = extraArgs, appendTask = appendTask)
+    
+    def remove_task(self, task):
+        '''Remove a task from a taskMgr
+
+        Arguments:
+            task {obg | str} -- task to remove fro m TskMg
+        '''
+        self.task_mgr.remove(task)
+
     def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
 
@@ -383,7 +403,7 @@ class ViewerApp(ShowBase):
         if texture_path:
             texture = self.loader.load_texture(texture_path)
             node.set_texture(texture)
-            node.setTransparency(True)
+            node.set_transparency(True)
 
     def set_materials(self, root_path, name_material_dict):
         """Override material of nodes within a group.
@@ -561,7 +581,7 @@ class ViewerApp(ShowBase):
         image = texture.get_ram_image_as(requested_format)
         array = np.asarray(image).reshape((ysize, xsize, dsize))
         return np.flipud(array)
-
+    
     def _make_light_ambient(self, color):
         light = AmbientLight('Ambient Light')
         light.set_color(Vec3(*color))
