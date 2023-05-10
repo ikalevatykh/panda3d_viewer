@@ -172,7 +172,7 @@ class ViewerConfig:
         """
         self.set_value('model-cache-dir', cache_dir)
         self.set_value('model-cache-textures', cache_textures)
-        
+
     def show_fps_meter(self, show):
         """Show fps meter.
 

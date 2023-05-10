@@ -105,7 +105,7 @@ class ViewerApp(ShowBase):
         """User closed the main window."""
         self.stop()
 
-    def add_task(self, task, name, extraArgs = [], appendTask=True):
+    def add_task(self, task, name, extra_args = [], append_task=True):
         '''Add a task to a taskMgr
 
         Arguments:
@@ -115,8 +115,8 @@ class ViewerApp(ShowBase):
         Return:
             task {task obj}
         '''
-        return self.task_mgr.add(task, name, extraArgs = extraArgs, appendTask = appendTask)
-    
+        return self.task_mgr.add(task, name, extraArgs = extra_args, appendTask = append_task)
+
     def remove_task(self, task):
         '''Remove a task from a taskMgr
 

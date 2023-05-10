@@ -1,9 +1,8 @@
 """This module contains Viewer, a simpe and efficient cross-platform 3D viewer."""
 
+import cv2 as cv
 from .viewer_config import ViewerConfig
 from .viewer_errors import ViewerError, ViewerClosedError
-from direct.task import Task
-import cv2 as cv
 
 __all__ = ('Viewer')
 
@@ -11,7 +10,8 @@ __all__ = ('Viewer')
 class Viewer:
     """A Panda3D based viewer."""
 
-    def __init__(self, window_title=None, window_type='onscreen', config=None, event_manager=None, **kwargs):
+    def __init__(self, window_title=None, window_type='onscreen', 
+                 config=None, **kwargs):
         """Open a window, setup a scene.
 
         Keyword Arguments:
@@ -38,7 +38,7 @@ class Viewer:
             self._app = ViewerApp(config)
         else:
             raise ViewerError('Unknown window type: {}'.format(window_type))
-        
+
     def join(self):
         """Run the application until the user close the main window."""
         if self._window_type == 'onscreen':
@@ -54,7 +54,7 @@ class Viewer:
         if self._window_type == 'offscreen':
             self._app.destroy()
     
-    def add_task(self, task, name, extraArgs = [], appendTask=True):
+    def add_task(self, task, name, extra_args = [], append_task=True):
         '''Add a task to a taskMgr
 
         Arguments:
@@ -64,7 +64,7 @@ class Viewer:
         Return:
             task {task obj}
         '''
-        return self._app.add_task(task, name, extraArgs = extraArgs, appendTask = appendTask)
+        return self._app.add_task(task, name, extraArgs = extra_args, appendTask = append_task)
 
     def remove_task(self, task):
         '''Remove a task from a taskMgr
@@ -362,7 +362,8 @@ class Viewer:
             duration {int} -- length of video
         """
         imm = self.get_screenshot()
-        out = cv.VideoWriter(path, cv.VideoWriter_fourcc(*codec), fps, (imm.shape[1], imm.shape[0]), True)
+        fourcc = cv.VideoWriter_fourcc(*codec)
+        out = cv.VideoWriter(path, fourcc, fps, (imm.shape[1], imm.shape[0]), True)
         out.write(imm)
         for _ in range(fps * duration):
             print('for')
