@@ -105,7 +105,7 @@ class ViewerApp(ShowBase):
         """User closed the main window."""
         self.stop()
 
-    def add_task(self, task, name, extra_args = [], append_task=True):
+    def add_task(self, task, name, extra_args = None, append_task=True):
         '''Add a task to a taskMgr
 
         Arguments:
@@ -115,6 +115,8 @@ class ViewerApp(ShowBase):
         Return:
             task {task obj}
         '''
+        if extra_args is None:
+            extra_args = []
         return self.task_mgr.add(task, name, extraArgs = extra_args, appendTask = append_task)
 
     def remove_task(self, task):
@@ -581,7 +583,7 @@ class ViewerApp(ShowBase):
         image = texture.get_ram_image_as(requested_format)
         array = np.asarray(image).reshape((ysize, xsize, dsize))
         return np.flipud(array)
-    
+
     def _make_light_ambient(self, color):
         light = AmbientLight('Ambient Light')
         light.set_color(Vec3(*color))

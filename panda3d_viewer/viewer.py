@@ -10,8 +10,7 @@ __all__ = ('Viewer')
 class Viewer:
     """A Panda3D based viewer."""
 
-    def __init__(self, window_title=None, window_type='onscreen', 
-                 config=None, **kwargs):
+    def __init__(self, window_title=None, window_type='onscreen', config=None, **kwargs):
         """Open a window, setup a scene.
 
         Keyword Arguments:
@@ -53,8 +52,8 @@ class Viewer:
         """Destroy the application and free all resources."""
         if self._window_type == 'offscreen':
             self._app.destroy()
-    
-    def add_task(self, task, name, extra_args = [], append_task=True):
+
+    def add_task(self, task, name, extra_args = None, append_task=True):
         '''Add a task to a taskMgr
 
         Arguments:
@@ -64,6 +63,8 @@ class Viewer:
         Return:
             task {task obj}
         '''
+        if extra_args is None:
+            extra_args = []
         return self._app.add_task(task, name, extraArgs = extra_args, appendTask = append_task)
 
     def remove_task(self, task):
