@@ -352,7 +352,7 @@ class Viewer:
         """
         self._app.step()  # render
         return self._app.get_screenshot(requested_format)
-    
+
     def save_movie(self, path = './output.avi', codec = 'XVID', fps = 30, duration = 10):
         """Capture and return a screenshot from offscreen buffer.
 
