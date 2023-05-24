@@ -1,8 +1,8 @@
 """This module contains Viewer, a simpe and efficient cross-platform 3D viewer."""
 
+import cv2 as cv
 from .viewer_config import ViewerConfig
 from .viewer_errors import ViewerError, ViewerClosedError
-
 
 __all__ = ('Viewer')
 
@@ -17,6 +17,7 @@ class Viewer:
             window_title {str} -- window title (default: {'Viewer'})
             window_type {str} -- window type, one of onscreen, offscreen (default: {'onscreen'})
             config {ViewerConfig} -- viewer configuration (default: {None})
+            event_manager {EventHandler} -- viewer event manager (default: {None})
         """
         if config is None:
             config = ViewerConfig(**kwargs)
@@ -51,6 +52,29 @@ class Viewer:
         """Destroy the application and free all resources."""
         if self._window_type == 'offscreen':
             self._app.destroy()
+
+    def add_task(self, task, name, extra_args = None, append_task=True):
+        '''Add a task to a taskMgr
+
+        Arguments:
+            task {fun} -- task to add
+            name {str} -- name of the task
+        
+        Return:
+            task {task obj}
+        '''
+        if extra_args is None:
+            extra_args = []
+        return self._app.add_task(task, name, extra_args = extra_args, append_task = append_task)
+
+    def remove_task(self, task):
+        '''Remove a task from a taskMgr
+
+        Arguments:
+            task {obg | str} -- task to remove
+        '''
+        self._app.remove_task(task)
+
 
     def append_group(self, root_path, remove_if_exists=True, scale=1.0):
         """Append a root node for a group of nodes.
@@ -328,6 +352,24 @@ class Viewer:
         """
         self._app.step()  # render
         return self._app.get_screenshot(requested_format)
+
+    def save_movie(self, path = './output.avi', codec = 'XVID', fps = 30, duration = 10):
+        """Capture and return a screenshot from offscreen buffer.
+
+        Keyword Arguments:
+            path {str} -- path and name of the output file (default: {'./output.avi'}) 
+            codec {str} -- codec to use DIVX, XVID, MJPG, X264, WMV1, WMV2, MJPG, see doc of openCv
+            fps {int} -- fps of the video
+            duration {int} -- length of video
+        """
+        imm = self.get_screenshot()
+        fourcc = cv.VideoWriter_fourcc(*codec)
+        out = cv.VideoWriter(path, fourcc, fps, (imm.shape[1], imm.shape[0]), True)
+        out.write(imm)
+        for _ in range(fps * duration):
+            imm = self.get_screenshot()
+            out.write(imm[:,:,:3])
+        out.release()
 
     def __enter__(self):
         """Enter the viewer context."""
