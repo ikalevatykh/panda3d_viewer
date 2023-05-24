@@ -65,7 +65,7 @@ class Viewer:
         '''
         if extra_args is None:
             extra_args = []
-        return self._app.add_task(task, name, extraArgs = extra_args, appendTask = append_task)
+        return self._app.add_task(task, name, extra_args = extra_args, append_task = append_task)
 
     def remove_task(self, task):
         '''Remove a task from a taskMgr
@@ -367,10 +367,9 @@ class Viewer:
         out = cv.VideoWriter(path, fourcc, fps, (imm.shape[1], imm.shape[0]), True)
         out.write(imm)
         for _ in range(fps * duration):
-            print('for')
             imm = self.get_screenshot()
             out.write(imm[:,:,:3])
-        out = None
+        out.release()
 
     def __enter__(self):
         """Enter the viewer context."""
