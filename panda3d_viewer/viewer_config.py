@@ -99,6 +99,14 @@ class ViewerConfig:
         self.set_value('framebuffer-multisample', enable)
         self.set_value('multisamples', multisamples)
 
+    def enable_depth(self, enable) :
+        """Enable depth render.
+
+        Arguments:
+            enable {bool} -- flag
+        """
+        self.set_value('depth-render', enable)
+
     def enable_lights(self, enable):
         """Enable lightning.
 

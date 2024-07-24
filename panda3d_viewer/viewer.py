@@ -329,6 +329,10 @@ class Viewer:
         self._app.step()  # render
         return self._app.get_screenshot(requested_format)
 
+    def get_depth_screenshot(self): 
+        self._app.step()  # render
+        return self._app.get_depth_screenshot()
+    
     def __enter__(self):
         """Enter the viewer context."""
         return self
