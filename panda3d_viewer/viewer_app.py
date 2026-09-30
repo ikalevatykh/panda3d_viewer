@@ -20,7 +20,7 @@ from direct.gui.OnscreenText import OnscreenText
 
 from . import geometry
 
-__all__ = ('ViewerApp')
+__all__ = ('ViewerApp',)
 
 
 class ViewerApp(ShowBase):

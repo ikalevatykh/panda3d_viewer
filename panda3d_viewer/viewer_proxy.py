@@ -4,7 +4,7 @@ import multiprocessing as mp
 
 from .viewer_errors import ViewerClosedError
 
-__all__ = ('ViewerAppProxy')
+__all__ = ('ViewerAppProxy',)
 
 
 class ViewerAppProxy(mp.Process):

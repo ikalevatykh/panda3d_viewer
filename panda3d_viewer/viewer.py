@@ -4,7 +4,7 @@ from .viewer_config import ViewerConfig
 from .viewer_errors import ViewerError, ViewerClosedError
 
 
-__all__ = ('Viewer')
+__all__ = ('Viewer',)
 
 
 class Viewer:

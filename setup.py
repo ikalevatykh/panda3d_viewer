@@ -39,4 +39,5 @@ setup(
     packages=find_packages(),
     install_requires=['numpy', 'panda3d>=1.10'],
     include_package_data=True,
+    package_data={'panda3d_viewer': ['*.pyi', 'py.typed']},
 )
