@@ -37,7 +37,12 @@ setup(
     ],
     keywords='rendering graphics 3d visualization',
     packages=find_packages(),
-    install_requires=['numpy', 'panda3d>=1.10'],
+    install_requires=[
+        'numpy',
+        'panda3d @ git+https://github.com/StableKite/panda3d.git ; '
+        'python_version == "3.15" and sys_platform == "linux"',
+        'panda3d>=1.10; python_version != "3.15" or sys_platform != "linux"',
+    ],
     include_package_data=True,
     package_data={'panda3d_viewer': ['*.pyi', 'py.typed']},
 )
