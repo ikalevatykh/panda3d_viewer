@@ -8,3 +8,4 @@ include pytest.ini
 recursive-include images *.gif
 recursive-include images *.png
 recursive-include tests *.py
+recursive-include panda3d_viewer *.pyi py.typed

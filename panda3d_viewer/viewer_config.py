@@ -1,6 +1,6 @@
 """This module contains ViewerConfig - a viewer's configuration storage."""
 
-__all__ = ('ViewerConfig')
+__all__ = ('ViewerConfig',)
 
 
 class ViewerConfig:
