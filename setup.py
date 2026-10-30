@@ -14,7 +14,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='panda3d_viewer',
-    version='0.4.1',
+    version='0.4.1+stablekite.1',
     description='Easy-to-use python 3D graphics viewer',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -40,8 +40,8 @@ setup(
     install_requires=[
         'numpy',
         'panda3d @ git+https://github.com/StableKite/panda3d.git ; '
-        'python_version == "3.15" and sys_platform == "linux"',
-        'panda3d>=1.10; python_version != "3.15" or sys_platform != "linux"',
+        'python_version == "3.15" and (sys_platform == "linux" or sys_platform == "win32")',
+        'panda3d>=1.10; python_version != "3.15" or (sys_platform != "linux" and sys_platform != "win32")',
     ],
     include_package_data=True,
     package_data={'panda3d_viewer': ['*.pyi', 'py.typed']},
